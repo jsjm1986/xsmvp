@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI小说生成器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="ai-background">
+        <div class="ai-particles"></div>
+    </div>
+    <div class="container">
+        <div class="api-key-section">
+            <div class="section-header">
+                <i class="fas fa-key"></i>
+                <h2>API密钥验证</h2>
+            </div>
+            <div class="api-key-container">
+                <div class="api-key-input">
+                    <input type="password" id="apiKey" placeholder="请输入Deepseek API密钥">
+                    <button type="button" id="toggleApiKey" class="toggle-btn">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button type="button" id="verifyKeyBtn" class="verify-btn">
+                    <i class="fas fa-check"></i>
+                    验证密钥
+                </button>
+                <div id="apiKeyStatus" class="api-key-status"></div>
+            </div>
+        </div>
+        <header>
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1><span class="highlight">AI</span> 小说生成器</h1>
+            <p class="subtitle">由深度学习驱动的智能创作系统</p>
+        </header>
+        <main>
+            <div class="input-section">
+                <div class="section-header">
+                    <i class="fas fa-cog fa-spin"></i>
+                    <h2>创作参数配置</h2>
+                </div>
+                <div class="form-group">
+                    <label for="novelTitle">
+                        <i class="fas fa-heading"></i>
+                        小说标题
+                    </label>
+                    <input type="text" id="novelTitle" placeholder="请输入小说标题">
+                </div>
+                <div class="form-group">
+                    <label for="novelTheme">
+                        <i class="fas fa-bookmark"></i>
+                        主题/类型
+                    </label>
+                    <select id="novelTheme">
+                        <option value="玄幻">玄幻</option>
+                        <option value="科幻">科幻</option>
+                        <option value="言情">言情</option>
+                        <option value="悬疑">悬疑</option>
+                        <option value="历史">历史</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="writingStyle">
+                        <i class="fas fa-feather-alt"></i>
+                        写作风格
+                    </label>
+                    <select id="writingStyle">
+                        <option value="细腻">细腻描写</option>
+                        <option value="简洁">简洁明快</option>
+                        <option value="华丽">华丽辞藻</option>
+                        <option value="幽默">幽默诙谐</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="totalChapters">
+                        <i class="fas fa-list-ol"></i>
+                        总章节数
+                    </label>
+                    <div class="chapter-count-container">
+                        <div class="quick-select">
+                            <button type="button" data-value="10">10章</button>
+                            <button type="button" data-value="20">20章</button>
+                            <button type="button" data-value="30">30章</button>
+                            <button type="button" data-value="50">50章</button>
+                            <button type="button" data-value="100">100章</button>
+                        </div>
+                        <div class="number-input">
+                            <input type="number" id="totalChapters" min="1" max="200" value="10" placeholder="请输入章节数（1-200）">
+                            <div class="number-controls">
+                                <button type="button" class="number-up"><i class="fas fa-chevron-up"></i></button>
+                                <button type="button" class="number-down"><i class="fas fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-tip">支持1-200章，可直接输入或使用快速选择</div>
+                </div>
+                <div class="form-group">
+                    <label for="mainPlot">
+                        <i class="fas fa-scroll"></i>
+                        主要剧情
+                    </label>
+                    <div class="input-with-buttons">
+                        <textarea id="mainPlot" placeholder="描述小说的整体故事走向，包括主要转折点和结局"></textarea>
+                        <div class="textarea-buttons">
+                            <button type="button" id="generatePlotBtn" class="action-btn">
+                                <i class="fas fa-magic"></i>
+                                AI生成
+                            </button>
+                            <button type="button" id="optimizePlotBtn" class="action-btn">
+                                <i class="fas fa-wand-sparkles"></i>
+                                优化
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="characterInfo">
+                        <i class="fas fa-user-circle"></i>
+                        主要人物设定
+                    </label>
+                    <div class="input-with-buttons">
+                        <textarea id="characterInfo" placeholder="描述主要人物的性格、背景等信息"></textarea>
+                        <div class="textarea-buttons">
+                            <button type="button" id="generateCharactersBtn" class="action-btn">
+                                <i class="fas fa-magic"></i>
+                                AI生成
+                            </button>
+                            <button type="button" id="optimizeCharactersBtn" class="action-btn">
+                                <i class="fas fa-wand-sparkles"></i>
+                                优化
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="worldSetting">
+                        <i class="fas fa-globe"></i>
+                        世界观设定
+                    </label>
+                    <div class="input-with-buttons">
+                        <textarea id="worldSetting" placeholder="描述故事发生的背景、时代、特殊设定等"></textarea>
+                        <div class="textarea-buttons">
+                            <button type="button" id="generateWorldBtn" class="action-btn">
+                                <i class="fas fa-magic"></i>
+                                AI生成
+                            </button>
+                            <button type="button" id="optimizeWorldBtn" class="action-btn">
+                                <i class="fas fa-wand-sparkles"></i>
+                                优化
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group chapter-outlines-container">
+                    <label for="chapterOutlines">
+                        <i class="fas fa-list-alt"></i>
+                        分章节大纲
+                    </label>
+                    <div class="chapter-outlines-wrapper">
+                        <div id="chapterOutlinesList"></div>
+                        <button type="button" id="generateOutlinesBtn" class="outline-btn">
+                            <i class="fas fa-magic"></i>
+                            自动生成大纲
+                        </button>
+                    </div>
+                </div>
+                <div class="advanced-options">
+                    <div class="section-header">
+                        <i class="fas fa-sliders-h"></i>
+                        <h3>高级选项</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="chapterLength">
+                            <i class="fas fa-text-width"></i>
+                            章节字数
+                        </label>
+                        <select id="chapterLength">
+                            <option value="2000">2000字/章</option>
+                            <option value="3000">3000字/章</option>
+                            <option value="5000">5000字/章</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="creativity">
+                            <i class="fas fa-lightbulb"></i>
+                            创意程度
+                        </label>
+                        <div class="slider-container">
+                            <input type="range" id="creativity" min="0" max="100" value="80">
+                            <span id="creativityValue">80</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="generateBtn" class="primary-btn">
+                        <i class="fas fa-magic"></i>
+                        一键生成小说
+                    </button>
+                    <button id="saveBtn" class="secondary-btn" disabled>
+                        <i class="fas fa-save"></i>
+                        保存全部
+                    </button>
+                </div>
+            </div>
+            <div class="output-section">
+                <div class="loading" style="display: none;">
+                    <div class="ai-thinking">
+                        <div class="brain-waves"></div>
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <p>AI正在创作中，请稍候...</p>
+                    <div class="progress-info">
+                        <span id="currentProgress">正在生成第 1 章，共 0 章</span>
+                        <div class="progress-bar">
+                            <div class="progress">
+                                <div class="progress-glow"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="novel-content">
+                    <div class="content-header">
+                        <div class="section-header">
+                            <i class="fas fa-book-open"></i>
+                            <h2>生成的小说内容</h2>
+                        </div>
+                        <div class="chapter-info">
+                            <i class="fas fa-chart-bar"></i>
+                            <span id="totalInfo">总字数：0</span>
+                        </div>
+                    </div>
+                    <div id="chapterList"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html> 

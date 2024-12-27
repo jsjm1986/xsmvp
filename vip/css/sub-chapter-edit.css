@@ -1,0 +1,95 @@
+.sub-outline {
+    position: relative;
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #2c2c2c;
+    border-radius: 8px;
+    background: rgba(32, 32, 32, 0.8);
+}
+
+.sub-outline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.sub-outline-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.sub-outline-actions button {
+    background: transparent;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    padding: 5px 10px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.sub-outline-actions button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #666;
+}
+
+.sub-outline-actions .edit-btn {
+    color: #4CAF50;
+}
+
+.sub-outline-actions .save-btn {
+    color: #2196F3;
+}
+
+.sub-outline-actions .cancel-btn {
+    color: #f44336;
+}
+
+.sub-outline.editing {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.sub-outline .info-item .value[contenteditable="true"],
+.sub-outline .sub-outline-text[contenteditable="true"] {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px;
+    border-radius: 4px;
+    outline: none;
+}
+
+.save-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    animation: fadeOut 2s forwards;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.sub-chapters-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.sub-chapters-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+} 

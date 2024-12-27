@@ -1,0 +1,33 @@
+// 生成小说按钮事件
+generateBtn?.addEventListener('click', async () => {
+    if (!window.novelGenerator) {
+        console.error('NovelGenerator 未初始化');
+        return;
+    }
+
+    if (!localStorage.getItem('ai_config')) {
+        alert('请先完成 API 配置验证');
+        return;
+    }
+
+    if (!validateInputs([
+        'novelTitle', 'novelTheme', 'mainPlot',
+        'characterInfo', 'worldSetting', 'totalChapters',
+        'writingStyle', 'chapterLength', 'creativity'
+    ])) return;
+
+    try {
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
+        
+        // 使用 novel-generator.js 的生成逻辑
+        await window.novelGenerator.startGeneration();
+        
+    } catch (error) {
+        console.error('生成小说失败:', error);
+        alert('生成失败: ' + error.message);
+    } finally {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fas fa-magic"></i> 一键生成小说';
+    }
+}); 

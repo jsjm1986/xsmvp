@@ -1,0 +1,49 @@
+// API配置
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+
+// 在文件开头添加
+let isApiKeyVerified = false;
+let globalConfig = null;
+let novelContent = []; // 用于存储小说内容
+
+// 初始化面
+document.addEventListener('DOMContentLoaded', () => {
+    // 获取所有按钮元素
+    const generateBtn = document.getElementById('generateBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const generateOutlinesBtn = document.getElementById('generateOutlinesBtn');
+    const generatePlotBtn = document.getElementById('generatePlotBtn');
+    const optimizePlotBtn = document.getElementById('optimizePlotBtn');
+    const generateCharactersBtn = document.getElementById('generateCharactersBtn');
+    const optimizeCharactersBtn = document.getElementById('optimizeCharactersBtn');
+    const generateWorldBtn = document.getElementById('generateWorldBtn');
+    const optimizeWorldBtn = document.getElementById('optimizeWorldBtn');
+
+    // 获取输入元素
+    const novelTitle = document.getElementById('novelTitle');
+    const novelTheme = document.getElementById('novelTheme');
+    const writingStyle = document.getElementById('writingStyle');
+    const totalChapters = document.getElementById('totalChapters');
+    const mainPlot = document.getElementById('mainPlot');
+    const characterInfo = document.getElementById('characterInfo');
+    const worldSetting = document.getElementById('worldSetting');
+    const chapterLength = document.getElementById('chapterLength');
+    const creativity = document.getElementById('creativity');
+
+    // 初始状态设置
+    const buttons = [
+        generateBtn, saveBtn, generateOutlinesBtn,
+        generatePlotBtn, optimizePlotBtn,
+        generateCharactersBtn, optimizeCharactersBtn,
+        generateWorldBtn, optimizeWorldBtn
+    ];
+    
+    // 禁用所有按钮，直到API验证成功
+    buttons.forEach(btn => {
+        if (btn) btn.disabled = true;
+    });
+
+    // 生成小说按钮事件已移至 novel-generator.js
+
+    // ... 其他事件绑定代码 ...
+}); 

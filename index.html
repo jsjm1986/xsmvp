@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI小说生成器 - 项目介绍</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/about.css">
+    <style>
+        /* AI背景动画 */
+        .ai-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            overflow: hidden;
+        }
+
+        .ai-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(76, 161, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, rgba(76, 161, 255, 0.05) 2px, transparent 2px);
+            background-size: 30px 30px, 60px 60px;
+            animation: particleMove 20s linear infinite;
+        }
+
+        @keyframes particleMove {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        /* 科技感文字效果 */
+        .tech-text {
+            background: linear-gradient(120deg, #4a90e2, #67b26f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .tech-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 2px;
+            text-shadow: -1px 0 1px rgba(74, 144, 226, 0.3);
+            top: 0;
+            color: transparent;
+            z-index: -1;
+        }
+
+        /* 卡片悬浮效果 */
+        .feature-card, .case-card, .pricing-card, .tech-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover, .case-card:hover, .pricing-card:hover, .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.2);
+            border-color: rgba(74, 144, 226, 0.3);
+        }
+
+        /* AI图标动画 */
+        .feature-card i, .tech-card i {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(120deg, #4a90e2, #67b26f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulseIcon 2s infinite;
+        }
+
+        @keyframes pulseIcon {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* 科技感按钮 */
+        .primary-btn, .secondary-btn, .pricing-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #4a90e2, #67b26f);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn::before, .secondary-btn::before, .pricing-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .primary-btn:hover::before, .secondary-btn:hover::before, .pricing-btn:hover::before {
+            left: 100%;
+        }
+
+        /* 进度条动画 */
+        .progress-bar {
+            height: 4px;
+            width: 100%;
+            background: rgba(74, 144, 226, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, #4a90e2, #67b26f);
+            animation: progressMove 2s infinite;
+        }
+
+        @keyframes progressMove {
+            0% {
+                left: -30%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* 科技感分割线 */
+        .tech-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4a90e2, transparent);
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .tech-divider::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4a90e2;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #4a90e2;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .qr-container {
+            margin: 20px 0;
+        }
+
+        .qr-code {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .modal h3 {
+            margin-top: 10px;
+            color: #333;
+        }
+
+        /* 案例展示样式 */
+        .cases-section {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .cases-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .case-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .case-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .case-content h3 {
+            margin: 0 0 15px;
+            color: #333;
+            font-size: 1.5em;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+
+        .case-type {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            background: #f0f4f8;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .case-desc {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+
+        .case-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .case-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .case-stats i {
+            color: #4a90e2;
+        }
+
+        @media (max-width: 768px) {
+            .cases-grid {
+                grid-template-columns: 1fr;
+                padding: 0 10px;
+            }
+        }
+
+        /* 移动端响应式优化 */
+        @media (max-width: 768px) {
+            /* 导航栏优化 */
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .nav-link {
+                width: 100%;
+                text-align: center;
+                padding: 10px;
+                border-radius: 6px;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            /* 英雄区域优化 */
+            .hero-section {
+                padding: 40px 20px;
+            }
+
+            .hero-content h1 {
+                font-size: 2em;
+                margin-bottom: 15px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .primary-btn, .secondary-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            /* 特色功能区域优化 */
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 15px;
+            }
+
+            .feature-card {
+                padding: 20px;
+            }
+
+            /* 案例展示优化 */
+            .cases-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 15px;
+            }
+
+            .case-card {
+                padding: 20px;
+            }
+
+            .case-desc {
+                min-height: auto;
+            }
+
+            /* 产品版本优化 */
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 0 15px;
+            }
+
+            .pricing-card {
+                max-width: none;
+            }
+
+            /* 使用指南优化 */
+            .guide-steps {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 15px;
+            }
+
+            .step-card {
+                padding: 20px;
+            }
+
+            /* 技术栈优化 */
+            .tech-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 15px;
+            }
+
+            /* 页脚优化 */
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+
+            .footer-section {
+                width: 100%;
+            }
+
+            /* 模态框优化 */
+            .modal-content {
+                width: 90%;
+                margin: 30% auto;
+            }
+
+            /* 通用间距优化 */
+            section {
+                padding: 40px 0;
+            }
+
+            h2 {
+                font-size: 1.8em;
+                margin-bottom: 30px;
+            }
+
+            /* 滚动优化 */
+            html {
+                scroll-padding-top: 70px; /* 为固定导航栏留出空间 */
+            }
+        }
+
+        /* 小屏幕手机额外优化 */
+        @media (max-width: 375px) {
+            .hero-content h1 {
+                font-size: 1.8em;
+            }
+
+            .case-stats {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .pricing-header h3 {
+                font-size: 1.5em;
+            }
+
+            .step-number {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"></div>
+    <div class="ai-background">
+        <div class="ai-particles"></div>
+    </div>
+
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>AI小说生成器</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> 返回首页</a>
+                <a href="#features" class="nav-link"><i class="fas fa-star"></i> 特色功能</a>
+                <a href="#cases" class="nav-link"><i class="fas fa-book-open"></i> 精选案例</a>
+                <a href="#pricing" class="nav-link"><i class="fas fa-tags"></i> 产品版本</a>
+                <a href="#guide" class="nav-link"><i class="fas fa-book"></i> 使用指南</a>
+                <a href="#tech" class="nav-link"><i class="fas fa-code"></i> 技术栈</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="tech-text" data-text="AI驱动的智能创作系统">AI驱动的智能创作系统</h1>
+                <p class="subtitle">让AI助你开启小说创作之旅</p>
+                <div class="hero-buttons">
+                    <a href="index.html" class="primary-btn">
+                        <i class="fas fa-magic"></i>
+                        开始创作
+                    </a>
+                    <a href="#guide" class="secondary-btn">
+                        <i class="fas fa-book-reader"></i>
+                        了解更多
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="tech-divider"></div>
+
+        <section id="features" class="features-section">
+            <h2><i class="fas fa-star"></i> 特色功能</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>多模型支持</h3>
+                    <p>支持多种AI服务商，包括DeepSeek、Claude、OpenAI等，让您选择最适合的AI模型。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>智能创作</h3>
+                    <p>自动生成连贯的故事情节，智能人物性格塑造，丰富的世界观构建。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-sitemap"></i>
+                    <h3>章节管理</h3>
+                    <p>灵活的章节划分，智能内容优化，自动生成章节大纲，批量章节拆分。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>风格定制</h3>
+                    <p>多样化的写作风格选择，可调节创意程度，打造独特的创作风格。</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="tech-divider"></div>
+
+        <section id="cases" class="cases-section">
+            <h2><i class="fas fa-book-open"></i> 精选案例</h2>
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-content">
+                        <h3>《龙***神》</h3>
+                        <p class="case-type">类型：玄幻修真</p>
+                        <p class="case-desc">一个普通少年意外获得远古神龙传承，踏上修炼之路，守护苍生的史诗故事。</p>
+                        <div class="case-stats">
+                            <span><i class="fas fa-eye"></i> 10万+阅读</span>
+                            <span><i class="fas fa-thumbs-up"></i> 98%好评</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-content">
+                        <h3>《都市***》</h3>
+                        <p class="case-type">类型：都市异能</p>
+                        <p class="case-desc">一位神秘医者游走都市，以超凡医术救死扶伤，揭开惊天阴谋的传奇故事。</p>
+                        <div class="case-stats">
+                            <span><i class="fas fa-eye"></i> 8万+阅读</span>
+                            <span><i class="fas fa-thumbs-up"></i> 96%好评</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-content">
+                        <h3>《星际***》</h3>
+                        <p class="case-type">类型：科幻未来</p>
+                        <p class="case-desc">人类首次星际移民计划展开，探索未知星域，��对重重危机的未来史诗。</p>
+                        <div class="case-stats">
+                            <span><i class="fas fa-eye"></i> 6万+阅读</span>
+                            <span><i class="fas fa-thumbs-up"></i> 95%好评</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-content">
+                        <h3>《仙***缘》</h3>
+                        <p class="case-type">类型：仙侠修真</p>
+                        <p class="case-desc">追寻长生之道，历经九死一生，在修真界书写一段传奇修仙之路。</p>
+                        <div class="case-stats">
+                            <span><i class="fas fa-eye"></i> 12万+阅读</span>
+                            <span><i class="fas fa-thumbs-up"></i> 97%好评</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-content">
+                        <h3>《末日***》</h3>
+                        <p class="case-type">类型：末世求生</p>
+                        <p class="case-desc">在病毒肆虐的末世中求生，带领幸存者建立新的文明，重建人类家园。</p>
+                        <div class="case-stats">
+                            <span><i class="fas fa-eye"></i> 7万+阅读</span>
+                            <span><i class="fas fa-thumbs-up"></i> 94%好评</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-content">
+                        <h3>《异界***》</h3>
+                        <p class="case-type">类型：异世界冒险</p>
+                        <p class="case-desc">穿越到魔法世界，学习神秘技能，结识各路伙伴，展开奇幻冒险。</p>
+                        <div class="case-stats">
+                            <span><i class="fas fa-eye"></i> 9万+阅读</span>
+                            <span><i class="fas fa-thumbs-up"></i> 96%好评</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="tech-divider"></div>
+
+        <section id="pricing" class="pricing-section">
+            <h2><i class="fas fa-tags"></i> 产品版本</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card free">
+                    <div class="pricing-header">
+                        <i class="fas fa-gift"></i>
+                        <h3>免费体验版</h3>
+                        <p class="price">¥0</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> 基础AI模型支持</li>
+                        <li><i class="fas fa-check"></i> 预设主题/类型选择</li>
+                        <li><i class="fas fa-check"></i> 预设写作风格选择</li>
+                        <li><i class="fas fa-check"></i> 最多生成30章节</li>
+                        <li><i class="fas fa-check"></i> 基础章节大纲生成</li>
+                        <li><i class="fas fa-times"></i> 自定义主题/类型</li>
+                        <li><i class="fas fa-times"></i> 自定义写作风格</li>
+                        <li><i class="fas fa-times"></i> 无限章节生成</li>
+                        <li><i class="fas fa-times"></i> 自定义大纲拆分</li>
+                        <li><i class="fas fa-times"></i> 编辑已生成内容</li>
+                    </ul>
+                    <a href="guest/index.html" class="pricing-btn">立即体验</a>
+                </div>
+                <div class="pricing-card pro">
+                    <div class="pricing-header">
+                        <i class="fas fa-crown"></i>
+                        <h3>专业版</h3>
+                        <div class="pro-label">推荐</div>
+                        <p class="price">¥199<span class="price-period">终身版</span></p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> 全部AI模型支持</li>
+                        <li><i class="fas fa-check"></i> 完全自定义主题/类型</li>
+                        <li><i class="fas fa-check"></i> 完全自定义写作风格</li>
+                        <li><i class="fas fa-check"></i> 无限章节数量</li>
+                        <li><i class="fas fa-check"></i> 高级章节大纲生成</li>
+                        <li><i class="fas fa-check"></i> 自定义大纲拆分数量</li>
+                        <li><i class="fas fa-check"></i> 无限小节拆分</li>
+                        <li><i class="fas fa-check"></i> 编辑修改已生成内容</li>
+                        <li><i class="fas fa-check"></i> 优先技术支持</li>
+                        <li><i class="fas fa-check"></i> 持续功能更新</li>
+                    </ul>
+                    <a href="vip/index.html" class="pricing-btn pro-btn">立即升级</a>
+                </div>
+                <div class="pricing-card enterprise">
+                    <div class="pricing-header">
+                        <i class="fas fa-building"></i>
+                        <h3>二开服务版</h3>
+                        <div class="enterprise-label">定制</div>
+                        <p class="price">价格详谈<span class="price-period">企业定制</span></p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> 包含专业版所有功能</li>
+                        <li><i class="fas fa-check"></i> 源码交付</li>
+                        <li><i class="fas fa-check"></i> 专属定制开发</li>
+                        <li><i class="fas fa-check"></i> 私有化部署</li>
+                        <li><i class="fas fa-check"></i> 品牌定制</li>
+                        <li><i class="fas fa-check"></i> 专属技术支持</li>
+                        <li><i class="fas fa-check"></i> 一对一技术咨询</li>
+                        <li><i class="fas fa-check"></i> 专属运维服务</li>
+                        <li><i class="fas fa-check"></i> 系统性能优化</li>
+                        <li><i class="fas fa-check"></i> 终身免费升级</li>
+                    </ul>
+                    <a href="#contact" class="pricing-btn enterprise-btn">联系我们</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="tech-divider"></div>
+
+        <!-- 添加二维码模态框 -->
+        <div id="qrModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h3>扫码联系我们</h3>
+                <div class="qr-container">
+                    <img src="images/contact-qr.png" alt="联系我们二维码" class="qr-code">
+                </div>
+            </div>
+        </div>
+
+        <section id="guide" class="guide-section">
+            <h2><i class="fas fa-book"></i> 使用指南</h2>
+            <div class="guide-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>基本设置</h3>
+                    <div class="step-content">
+                        <p class="step-desc">配置基本创作参数：</p>
+                        <ul class="step-details">
+                            <li><i class="fas fa-check-circle"></i> 输入小说标题</li>
+                            <li><i class="fas fa-check-circle"></i> 选择或自定义小说类型/主题（专业版）</li>
+                            <li><i class="fas fa-check-circle"></i> 选择或自定义写作风格（专业版）</li>
+                            <li><i class="fas fa-check-circle"></i> 设置总章节数（免费版限30章）</li>
+                            <li><i class="fas fa-info-circle"></i> 专业版无章节数量限制</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>生成大纲</h3>
+                    <div class="step-content">
+                        <p class="step-desc">一键生成小说框架：</p>
+                        <ul class="step-details">
+                            <li><i class="fas fa-check-circle"></i> 点击"一键生成小说"按钮</li>
+                            <li><i class="fas fa-check-circle"></i> 系统自动生成小说主线剧情</li>
+                            <li><i class="fas fa-check-circle"></i> 生成主要人物设定</li>
+                            <li><i class="fas fa-check-circle"></i> 生成世界观背景</li>
+                            <li><i class="fas fa-check-circle"></i> 自动生成每章节大纲</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>章节管理</h3>
+                    <div class="step-content">
+                        <p class="step-desc">优化章节结构：</p>
+                        <ul class="step-details">
+                            <li><i class="fas fa-check-circle"></i> 查看每章节大纲内容</li>
+                            <li><i class="fas fa-check-circle"></i> 专业版可拆分章节为多个小节</li>
+                            <li><i class="fas fa-check-circle"></i> 设置拆分数量（专业版无限制）</li>
+                            <li><i class="fas fa-check-circle"></i> 自动生成小节内容</li>
+                            <li><i class="fas fa-check-circle"></i> 专业版可编辑修改任何内容</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>保存导出</h3>
+                    <div class="step-content">
+                        <p class="step-desc">保存您的创作成果：</p>
+                        <ul class="step-details">
+                            <li><i class="fas fa-check-circle"></i> 点击"保存全部"按钮</li>
+                            <li><i class="fas fa-check-circle"></i> 自动保存基本信息</li>
+                            <li><i class="fas fa-check-circle"></i> 保存所有章节大纲</li>
+                            <li><i class="fas fa-check-circle"></i> 保存已生成的内容</li>
+                            <li><i class="fas fa-check-circle"></i> 导出为TXT文件格式</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="guide-tips">
+                <h3><i class="fas fa-lightbulb"></i> 使用小贴士</h3>
+                <ul class="tips-list">
+                    <li><i class="fas fa-star"></i> 建议在生成前先规划好小说的大致方向和主要情节</li>
+                    <li><i class="fas fa-star"></i> 章节数量建议控制在合理范围，可分批次生成</li>
+                    <li><i class="fas fa-star"></i> 生成内容后及时点击保存，避免内容丢失</li>
+                    <li><i class="fas fa-star"></i> 专业版用户可以随时修改和优化生成的内容</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="tech-divider"></div>
+
+        <section id="tech" class="tech-section">
+            <h2><i class="fas fa-code"></i> 技术栈</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <i class="fab fa-html5"></i>
+                    <h3>前端技术</h3>
+                    <ul>
+                        <li>HTML5</li>
+                        <li>CSS3</li>
+                        <li>JavaScript</li>
+                    </ul>
+                </div>
+                <div class="tech-card">
+                    <i class="fab fa-node-js"></i>
+                    <h3>后端技术</h3>
+                    <ul>
+                        <li>Node.js</li>
+                        <li>Express</li>
+                        <li>RESTful API</li>
+                    </ul>
+                </div>
+                <div class="tech-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI接口</h3>
+                    <ul>
+                        <li>DeepSeek API</li>
+                        <li>Claude API</li>
+                        <li>OpenAI API</li>
+                    </ul>
+                </div>
+                <div class="tech-card">
+                    <i class="fas fa-tools"></i>
+                    <h3>开发工具</h3>
+                    <ul>
+                        <li>Git</li>
+                        <li>VS Code</li>
+                        <li>npm</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AI小说生成器</h3>
+                <p>让AI为您的创作插上想象的翅膀</p>
+            </div>
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="index.html">开始创作</a></li>
+                    <li><a href="#features">功能特点</a></li>
+                    <li><a href="#pricing">产品版本</a></li>
+                    <li><a href="#guide">使用指南</a></li>
+                    <li><a href="#tech">技术支持</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>联系我们</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> jsjm@live.cn</li>
+                    <li><i class="fab fa-github"></i> GitHub</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AI小说生成器. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 获取模态框元素
+        const modal = document.getElementById('qrModal');
+        // 获取关闭按钮
+        const closeBtn = document.getElementsByClassName('close-btn')[0];
+        // 获取企业版联系我们按钮
+        const contactBtn = document.querySelector('.enterprise-btn');
+
+        // 点击联系我们按钮时显示模态框
+        contactBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.style.display = 'block';
+        });
+
+        // 点击关闭按钮关闭模态框
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // 点击模态框外部区域关闭模态框
+        window.addEventListener('click', function(e) {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 
