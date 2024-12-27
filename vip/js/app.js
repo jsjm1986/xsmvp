@@ -205,7 +205,7 @@ ${this.originalChapter.content}
 4. 确保内容的连贯性和完整性
 5. 与其他子章节保持剧情关联
 
-请按照原���式输出优化后的内容。`;
+请按照原格式输出优化后的内容。`;
 
         try {
             const response = await callAIAPI([
@@ -445,7 +445,7 @@ async function generateWorld(title, theme, plot) {
     return await callDeepseekAPI([
         {
             role: "system",
-            content: "你是一个专业的小说世界观设计师，擅长创造独特而合理的故事背景。"
+            content: "你是一个专业的小说世界观设计师，擅长创造独特而合理的故事背景��"
         },
         {
             role: "user",
@@ -531,7 +531,7 @@ function trackCharacters(previousChapters) {
     const characters = new Map();
     previousChapters.forEach(chapter => {
         // 分析章节中的人物状态变化
-        // 记录人物的情感、关系、能力���变化
+        // 记录人物的情感、关系、能力变化
     });
     return characters;
 }
@@ -617,7 +617,7 @@ ${params.chapterType === '高潮' ? '作为高潮章节，需要制造足够的�
 function formatKeyPlots(keyPlots) {
     return keyPlots.map(plot => `
 第${plot.chapter}章关键事件：
-- 重要���件：${plot.key_events.join('、')}
+- 重要事件：${plot.key_events.join('、')}
 - 关键决定：${plot.important_decisions.join('、')}
 - 人物发展：${plot.character_developments.join('、')}
 `).join('\n');
@@ -923,7 +923,7 @@ function updateProgress(current, total, message) {
     }
 }
 
-// 修改生成������������的函数
+// 修改生成大纲的函数
 async function generateOutlineBatch({ title, theme, mainPlot, characterInfo, worldSetting, phase, startChapter, batchSize, totalChapters, previousOutlines = [] }) {
     // 创建进度条
     const progressContainer = createProgressBar();
@@ -986,7 +986,7 @@ async function generateOutlineBatch({ title, theme, mainPlot, characterInfo, wor
 
         // 遍历并显示每个大纲
         outlines.forEach(outline => {
-            // 创建大��元素
+            // 创建大纲元素
             const outlineElement = document.createElement('div');
             outlineElement.className = 'chapter-outline';
             outlineElement.innerHTML = `
@@ -1395,7 +1395,7 @@ function getPhaseCharacteristics(phase) {
     return characteristics[phase] || '';
 }
 
-// 生成单章大纲
+// 生��单章大纲
 async function generateSingleOutline({ title, theme, mainPlot, characterInfo, worldSetting, phase, chapterNum, totalChapters }) {
     const prompt = `请为小说《${title}》生成第${chapterNum}章的大纲。
 
@@ -1416,7 +1416,7 @@ async function generateSingleOutline({ title, theme, mainPlot, characterInfo, wo
         const response = await callAIAPI([
             {
                 role: "system",
-                content: "你是小说策���师，���生成章节���纲。"
+                content: "你是小说策划师，请生成章节大纲。"
             },
             {
                 role: "user",
@@ -1436,7 +1436,7 @@ async function generateSingleOutline({ title, theme, mainPlot, characterInfo, wo
     }
 }
 
-// 验��大纲��容
+// 验证大纲内容
 function validateOutline(outline) {
     // 只检查必要字段是否存在且不为空
     return outline 
@@ -1451,7 +1451,7 @@ function validateOutline(outline) {
 // 辅助函数
 function initializeStorylineTracker(storyStructure) {
     try {
-        // 解析AI���回的故事结构
+        // 解析AI返回的故事结构
         const structureLines = storyStructure.split('\n');
         let currentSection = '';
         
@@ -1464,7 +1464,8 @@ function initializeStorylineTracker(storyStructure) {
                 currentSection = 'plotlines';
             } else if (line.includes('转折点')) {
                 currentSection = 'turningPoints';
-            } else if (line.includes('人物���长')) {
+            
+            } else if (line.includes('人物成长')) {
                 currentSection = 'characterArcs';
             } else if (line.includes('核心冲突')) {
                 currentSection = 'conflicts';
@@ -1712,7 +1713,7 @@ function updateConflictStatus(chapterNum, content) {
 
 // 更新故事线追踪器
 function updateStorylineTracker(currentOutlines) {
-    // 分析每个已生成大纲���连贯���
+    // 分析每个已生成大纲的连贯性
     for (let i = 0; i < currentOutlines.length; i++) {
         if (currentOutlines[i]) {
             analyzeOutlineContent(i + 1, currentOutlines[i]);
@@ -1895,7 +1896,7 @@ function formatUnresolvedConflicts(conflicts) {
         if (c.developments && c.developments.length > 0) {
             result += '  发展历程：\n';
             c.developments.forEach(d => {
-                result += `  ���� 第${d.chapter}���${d.content}\n`;
+                result += `  发展 第${d.chapter}章${d.content}\n`;
             });
         }
         return result;
@@ -2388,9 +2389,9 @@ function hasPersonalityConflict(establishedTrait, currentTraits) {
     // 定义性格特征的对立关系
     const conflictingTraits = {
         '果断': ['犹豫', '懦弱', '优柔寡断'],
-        '谨慎': ['鲁莽', '冲��', '������������'],
-        '开朗': ['阴郁', '消��', '抑郁'],
-        '善': ['邪恶', '残暴', '冷酷']
+        '谨慎': ['鲁莽', '冲', '冷酷'],   
+        '开朗': ['阴郁', '消', '抑郁'],
+        '善': ['��恶', '残暴', '冷酷']
     };
     
     // 检查是否存在对立性格表现
@@ -2405,7 +2406,7 @@ function hasPersonalityConflict(establishedTrait, currentTraits) {
 function extractEstablishedAbilities(developments) {
     const abilities = new Set();
     developments.forEach(dev => {
-        // ��取能力相关��描述
+        //  
         const abilityMatches = dev.development.match(/能力[^，。]+|技能[^，。]+|会[^，。]+/g);
         if (abilityMatches) {
             abilityMatches.forEach(match => abilities.add({
@@ -2844,7 +2845,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 splitCount
             );
 
-            // 显示���分结果
+            // 显示拆分结果
             const splitPreview = outlineElement.querySelector('.split-preview') || document.createElement('div');
             splitPreview.className = 'split-preview';
             splitPreview.innerHTML = `
@@ -2853,20 +2854,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="sub-outline">
                             <div class="sub-outline-header">
                                 <h4>第${chapter.mainChapterNum}-${chapter.subChapterNum}节：${chapter.title}</h4>
+                                <div class="sub-outline-actions">
+                                    <button class="edit-btn" title="编辑">
+                                        <i class="fas fa-edit"></i> 编辑
+                                    </button>
+                                    <button class="save-btn" title="保存" style="display: none;">
+                                        <i class="fas fa-save"></i> 保存
+                                    </button>
+                                    <button class="cancel-btn" title="取消" style="display: none;">
+                                        <i class="fas fa-times"></i> 取消
+                                    </button>
+                                </div>
                             </div>
                             <div class="sub-outline-info">
                                 <div class="info-item">
                                     <span class="label">主要人物：</span>
-                                    <span class="value">${chapter.characters}</span>
+                                    <span class="value" contenteditable="false">${chapter.characters}</span>
                                 </div>
                                 <div class="info-item">
                                     <span class="label">核心事件：</span>
-                                    <span class="value">${chapter.mainEvent}</span>
+                                    <span class="value" contenteditable="false">${chapter.mainEvent}</span>
                                 </div>
                             </div>
-                            <div class="sub-outline-content">
-                                <div class="sub-outline-text">${chapter.content}</div>
-                            </div>
+                            <div class="sub-outline-text" contenteditable="false">${chapter.content}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -2877,11 +2887,99 @@ document.addEventListener('DOMContentLoaded', () => {
                 outlineElement.appendChild(splitPreview);
             }
 
+            // 为每个子章节添加编辑功能
+            splitPreview.querySelectorAll('.sub-outline').forEach(subOutline => {
+                const editBtn = subOutline.querySelector('.edit-btn');
+                const saveBtn = subOutline.querySelector('.save-btn');
+                const cancelBtn = subOutline.querySelector('.cancel-btn');
+                const infoItems = subOutline.querySelectorAll('.info-item .value');
+                const subOutlineText = subOutline.querySelector('.sub-outline-text');
+                
+                // 存储原始内容，用于取消编辑
+                let originalContent = {
+                    characters: infoItems[0]?.textContent || '',
+                    mainEvent: infoItems[1]?.textContent || '',
+                    content: subOutlineText?.textContent || ''
+                };
+
+                // 编辑按钮点击事件
+                editBtn.addEventListener('click', () => {
+                    // 存储当前内容
+                    originalContent = {
+                        characters: infoItems[0]?.textContent || '',
+                        mainEvent: infoItems[1]?.textContent || '',
+                        content: subOutlineText?.textContent || ''
+                    };
+
+                    // 启用编辑模式
+                    infoItems.forEach(item => item.contentEditable = true);
+                    if (subOutlineText) subOutlineText.contentEditable = true;
+                    
+                    // 切换按钮显示
+                    editBtn.style.display = 'none';
+                    saveBtn.style.display = 'inline-flex';
+                    cancelBtn.style.display = 'inline-flex';
+                    
+                    // 添加编辑中的视觉提示
+                    subOutline.classList.add('editing');
+                });
+
+                // 保存按钮点击事件
+                saveBtn.addEventListener('click', () => {
+                    // 禁用编辑模式
+                    infoItems.forEach(item => item.contentEditable = false);
+                    if (subOutlineText) subOutlineText.contentEditable = false;
+                    
+                    // 切换按钮显示
+                    editBtn.style.display = 'inline-flex';
+                    saveBtn.style.display = 'none';
+                    cancelBtn.style.display = 'none';
+                    
+                    // 移除编辑中的视觉提示
+                    subOutline.classList.remove('editing');
+                    
+                    // 显示保存成功提示
+                    showSaveIndicator(subOutline);
+                });
+
+                // 取消按钮点击事件
+                cancelBtn.addEventListener('click', () => {
+                    // 恢复原始内容
+                    infoItems[0].textContent = originalContent.characters;
+                    infoItems[1].textContent = originalContent.mainEvent;
+                    if (subOutlineText) subOutlineText.textContent = originalContent.content;
+                    
+                    // 禁用编辑模式
+                    infoItems.forEach(item => item.contentEditable = false);
+                    if (subOutlineText) subOutlineText.contentEditable = false;
+                    
+                    // 切换按钮显示
+                    editBtn.style.display = 'inline-flex';
+                    saveBtn.style.display = 'none';
+                    cancelBtn.style.display = 'none';
+                    
+                    // 移除编辑中的视觉提示
+                    subOutline.classList.remove('editing');
+                });
+            });
+
             return subChapters;
             } catch (error) {
             console.error('拆分大纲时出错:', error);
             throw error;
         }
+    }
+
+    // 显示保存成功提示
+    function showSaveIndicator(subOutline) {
+        const saveIndicator = document.createElement('div');
+        saveIndicator.className = 'save-indicator';
+        saveIndicator.innerHTML = '<i class="fas fa-check"></i> 已保存';
+        subOutline.appendChild(saveIndicator);
+        
+        setTimeout(() => {
+            saveIndicator.remove();
+        }, 2000);
     }
 
     // 获取API相关元素

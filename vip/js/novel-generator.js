@@ -388,7 +388,7 @@ ${prevSection ? `上一节信息：
             let fullContent = `《${novelTitle}》\n\n`;
             
             // 添加基本信息
-            fullContent += `���基本信息】\n`;
+            fullContent += `【基本信息】\n`;
             fullContent += `类型：${theme}\n`;
             fullContent += `主要剧情：${mainPlot}\n`;
             fullContent += `主要人物：${characterInfo}\n`;
@@ -501,17 +501,154 @@ ${prevSection ? `上一节信息：
             if (!subChaptersContainer) {
                 subChaptersContainer = document.createElement('div');
                 subChaptersContainer.className = 'sub-chapters-container';
-                document.querySelector('.output-section').appendChild(subChaptersContainer);
+                const outputSection = document.querySelector('.output-section');
+                if (!outputSection) {
+                    throw new Error('找不到输出区域');
+                }
+                outputSection.appendChild(subChaptersContainer);
             }
             
-            // 显示子章节
-            splitter.displaySubChapters(subChaptersContainer);
+            // 清空现有内容
+            subChaptersContainer.innerHTML = '';
+            
+            // 创建子章节列表容器
+            const subChaptersList = document.createElement('div');
+            subChaptersList.className = 'sub-chapters-list';
+            
+            // 添加每个子章节
+            subChapters.forEach(subChapter => {
+                const subOutlineElement = document.createElement('div');
+                subOutlineElement.className = 'sub-outline';
+                subOutlineElement.innerHTML = `
+                    <div class="sub-outline-header">
+                        <h4>第${subChapter.mainChapterNum}-${subChapter.subChapterNum}节：${subChapter.title}</h4>
+                        <div class="sub-outline-actions">
+                            <button class="edit-btn" title="编辑">
+                                <i class="fas fa-edit"></i> 编辑
+                            </button>
+                            <button class="save-btn" title="保存" style="display: none;">
+                                <i class="fas fa-save"></i> 保存
+                            </button>
+                            <button class="cancel-btn" title="取消" style="display: none;">
+                                <i class="fas fa-times"></i> 取消
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sub-outline-info">
+                        <div class="info-item">
+                            <span class="label">主要人物：</span>
+                            <span class="value" contenteditable="false">${subChapter.characters}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">核心事件：</span>
+                            <span class="value" contenteditable="false">${subChapter.mainEvent}</span>
+                        </div>
+                    </div>
+                    <div class="sub-outline-text" contenteditable="false">${subChapter.content}</div>
+                `;
+
+                // 添加编辑功能
+                this.makeSubChapterEditable(subOutlineElement);
+                
+                subChaptersList.appendChild(subOutlineElement);
+            });
+            
+            // 将列表添加到容器中
+            subChaptersContainer.appendChild(subChaptersList);
             
             return subChapters;
         } catch (error) {
             console.error('拆分章节时出错:', error);
             throw error;
         }
+    }
+
+    // 添加子章节编辑功能
+    makeSubChapterEditable(subOutline) {
+        const editBtn = subOutline.querySelector('.edit-btn');
+        const saveBtn = subOutline.querySelector('.save-btn');
+        const cancelBtn = subOutline.querySelector('.cancel-btn');
+        const infoItems = subOutline.querySelectorAll('.info-item .value');
+        const subOutlineText = subOutline.querySelector('.sub-outline-text');
+        
+        // 存储原始内容，用于取消编辑
+        let originalContent = {
+            characters: infoItems[0]?.textContent || '',
+            mainEvent: infoItems[1]?.textContent || '',
+            content: subOutlineText?.textContent || ''
+        };
+
+        // 编辑按钮点击事件
+        editBtn.addEventListener('click', () => {
+            // 存储当前内容
+            originalContent = {
+                characters: infoItems[0]?.textContent || '',
+                mainEvent: infoItems[1]?.textContent || '',
+                content: subOutlineText?.textContent || ''
+            };
+
+            // 启用编辑模式
+            infoItems.forEach(item => item.contentEditable = true);
+            if (subOutlineText) subOutlineText.contentEditable = true;
+            
+            // 切换按钮显示
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-flex';
+            cancelBtn.style.display = 'inline-flex';
+            
+            // 添加编辑中的视觉提示
+            subOutline.classList.add('editing');
+        });
+
+        // 保存按钮点击事件
+        saveBtn.addEventListener('click', () => {
+            // 禁用编辑模式
+            infoItems.forEach(item => item.contentEditable = false);
+            if (subOutlineText) subOutlineText.contentEditable = false;
+            
+            // 切换按钮显示
+            editBtn.style.display = 'inline-flex';
+            saveBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            
+            // 移除编辑中的视觉提示
+            subOutline.classList.remove('editing');
+            
+            // 显示保存成功提示
+            this.showSaveIndicator(subOutline);
+        });
+
+        // 取消按钮点击事件
+        cancelBtn.addEventListener('click', () => {
+            // 恢复原始内容
+            infoItems[0].textContent = originalContent.characters;
+            infoItems[1].textContent = originalContent.mainEvent;
+            if (subOutlineText) subOutlineText.textContent = originalContent.content;
+            
+            // 禁用编辑模式
+            infoItems.forEach(item => item.contentEditable = false);
+            if (subOutlineText) subOutlineText.contentEditable = false;
+            
+            // 切换按钮显示
+            editBtn.style.display = 'inline-flex';
+            saveBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            
+            // 移除编辑中的视觉提示
+            subOutline.classList.remove('editing');
+        });
+    }
+
+    // 显示保存成功提示
+    showSaveIndicator(subOutline) {
+        const saveIndicator = document.createElement('div');
+        saveIndicator.className = 'save-indicator';
+        saveIndicator.innerHTML = '<i class="fas fa-check"></i> 已保存';
+        subOutline.appendChild(saveIndicator);
+        
+        setTimeout(() => {
+            saveIndicator.remove();
+        }, 2000);
     }
 }
 
